@@ -6,18 +6,23 @@ import {
   Grid,
   makeStyles,
   TextField,
+  Snackbar,
   Typography,
+  LinearProgress,
+  IconButton,
 } from "@material-ui/core";
 
-import { Link } from "react-router-dom";
-
-import { useFormik } from "formik";
-
 import faker from "faker";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import { useMutation } from "@apollo/client";
 import * as Yup from "yup";
 
+import { LOGIN_USER } from "../apollo/mutations/user";
 import { CustomButton } from "../components/custom-button";
+import { LoginVariables, User } from "../types/user";
+import { Close } from "@material-ui/icons";
+import { userReactiveVar } from "../apollo/variables/user";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -63,12 +68,23 @@ const useStyles = makeStyles((theme) => ({
 
 export const LoginPage: React.VFC = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
+
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [message, setMessage] = React.useState<any>("");
+
+  userReactiveVar.use();
 
   faker.setLocale("pt_BR");
 
+  const [loginMutation, { loading, data, error, reset }] = useMutation<
+    { loginUser: User },
+    LoginVariables
+  >(LOGIN_USER);
+
   const formik = useFormik({
     initialValues: {
-      email: faker.internet.email().toLowerCase(),
+      email: "cronosrage.jg@gmail.com",
       password: "Daredevil95!",
     },
     validationSchema: Yup.object({
@@ -79,14 +95,42 @@ export const LoginPage: React.VFC = () => {
         .min(8, "A senha dever ter 8 caracteres ou mais")
         .required("Requer um nome de usuário"),
     }),
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      loginMutation({
+        variables: {
+          data: {
+            email: values.email,
+            password: values.password,
+          },
+        },
+        onError: (error) => {
+          setMessage(error?.message);
+          setOpen(true);
+          reset();
+        },
+        onCompleted: (data) => {
+          formik.resetForm();
+          setMessage("Login feito com sucesso");
+          setOpen(true);
+          userReactiveVar.set(data.loginUser);
+          setTimeout(() => navigate("/dashboard"), 3000);
+        },
+      });
+    },
   });
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <Grid container className={classes.gridContainer}>
       <Grid item sm={12} className={classes.gridItem}>
         <Container className={classes.container}>
           <Paper>
+            {(loading && !data) || (loading && !error) ? (
+              <LinearProgress />
+            ) : null}
             <form className={classes.form} onSubmit={formik.handleSubmit}>
               <Typography variant="h5">Login</Typography>
 
@@ -128,7 +172,10 @@ export const LoginPage: React.VFC = () => {
                 </>
               </Grid>
 
-              <CustomButton text={"Entrar"} onClick={() => null} />
+              <CustomButton
+                text={loading ? "Fazendo login" : "Entrar"}
+                onClick={() => formik.submitForm()}
+              />
 
               <div>
                 <Typography variant="caption">
@@ -143,6 +190,28 @@ export const LoginPage: React.VFC = () => {
             </form>
           </Paper>
         </Container>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          message={message}
+          action={
+            <>
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+              >
+                <Close fontSize="small" />
+              </IconButton>
+            </>
+          }
+        />
       </Grid>
     </Grid>
   );
