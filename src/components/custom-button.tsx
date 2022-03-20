@@ -3,6 +3,7 @@ import { Button, makeStyles, ButtonProps } from "@material-ui/core";
 
 interface BtnProps extends ButtonProps {
   text: string;
+  variantType?: "text" | "outlined" | "contained" | undefined;
   onClick?: () => void;
   disabled?: boolean;
 }
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const CustomButton: React.VFC<BtnProps> = ({
   text,
+  variantType = "contained",
   onClick,
   disabled = false,
 }) => {
@@ -24,7 +26,7 @@ export const CustomButton: React.VFC<BtnProps> = ({
   return (
     <>
       <Button
-        variant="contained"
+        variant={variantType}
         onClick={onClick}
         disabled={disabled}
         color="primary"

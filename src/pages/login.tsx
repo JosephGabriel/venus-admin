@@ -12,17 +12,15 @@ import {
   IconButton,
 } from "@material-ui/core";
 
-import faker from "faker";
+import { Close } from "@material-ui/icons";
+
+import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { useMutation } from "@apollo/client";
-import * as Yup from "yup";
 
-import { LOGIN_USER } from "../apollo/mutations/user";
 import { CustomButton } from "../components/custom-button";
-import { LoginVariables, User } from "../types/user";
-import { Close } from "@material-ui/icons";
 import { userReactiveVar } from "../apollo/variables/user";
+import { useLoginUserMutation } from "../apollo/generated/schema";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -71,21 +69,17 @@ export const LoginPage: React.VFC = () => {
   const navigate = useNavigate();
 
   const [open, setOpen] = React.useState<boolean>(false);
-  const [message, setMessage] = React.useState<any>("");
+  const [message, setMessage] = React.useState<string>("");
 
   userReactiveVar.use();
 
-  faker.setLocale("pt_BR");
-
-  const [loginMutation, { loading, data, error, reset }] = useMutation<
-    { loginUser: User },
-    LoginVariables
-  >(LOGIN_USER);
+  const [loginMutation, { loading, data, error, reset }] =
+    useLoginUserMutation();
 
   const formik = useFormik({
     initialValues: {
-      email: "cronosrage.jg@gmail.com",
-      password: "Daredevil95!",
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -113,6 +107,7 @@ export const LoginPage: React.VFC = () => {
           setMessage("Login feito com sucesso");
           setOpen(true);
           userReactiveVar.set(data.loginUser);
+          localStorage.setItem("token", data.loginUser.token);
           setTimeout(() => navigate("/dashboard"), 3000);
         },
       });

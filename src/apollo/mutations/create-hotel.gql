@@ -1,0 +1,17 @@
+mutation CreateHotel($data: CreateHotelInput!) {
+  createHotel(data: $data) {
+    id
+    name
+    rating
+    summary
+    description
+    thumbnail
+    images
+    logo
+    slug
+    latitude
+    longitude
+    address
+    zipCode
+  }
+}

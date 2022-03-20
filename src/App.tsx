@@ -24,6 +24,11 @@ function App() {
   const theme = createTheme({
     palette: {
       type: colorMode,
+      primary: {
+        main: "#90caf9",
+        dark: "#508AA8",
+        // dark: "#031927",
+      },
     },
   });
 

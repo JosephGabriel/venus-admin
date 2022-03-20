@@ -1,0 +1,17 @@
+query GetAllHotels {
+  hotels {
+    id
+    name
+    rating
+    summary
+    description
+    thumbnail
+    images
+    logo
+    latitude
+    slug
+    address
+    addressNumber
+    zipCode
+  }
+}
