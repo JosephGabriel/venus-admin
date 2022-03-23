@@ -64,6 +64,7 @@ export type CreateBookingInput = {
 export type CreateHotelInput = {
   address: Scalars['String'];
   addressNumber: Scalars['String'];
+  admin: Scalars['ID'];
   description: Scalars['String'];
   images?: InputMaybe<Array<Scalars['Upload']>>;
   latitude: Scalars['Latitude'];
@@ -227,13 +228,14 @@ export type MutationUpdateUserPasswordArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  hello?: Maybe<Scalars['String']>;
   /** Usada para buscar um hotel pelo id */
   hotel: Hotel;
   /** Usada para buscar um hotel pelo slug */
   hotelBySlug: Hotel;
   /** Usada para buscar hotéis */
   hotels?: Maybe<Array<Hotel>>;
+  /** Usada para buscar um hotel pelo slug */
+  hotelsByAdmin?: Maybe<Array<Hotel>>;
   /** Usada para buscar um quarto pelo id */
   room: Room;
   /** Usada para buscar um hotel pelo slug */
@@ -250,6 +252,11 @@ export type QueryHotelArgs = {
 
 export type QueryHotelBySlugArgs = {
   slug: Scalars['String'];
+};
+
+
+export type QueryHotelsByAdminArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -392,6 +399,13 @@ export type LoginUserMutationVariables = Exact<{
 
 export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'AuthPayload', token: string, user: { __typename?: 'User', firstName: string, lastName: string, userName: string, email: any, avatar?: string | null, password: any, id: string, passwordChangedAt?: string | null, role: UserRole, active: boolean, verified: boolean } } };
 
+export type HotelsByAdminQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type HotelsByAdminQuery = { __typename?: 'Query', hotelsByAdmin?: Array<{ __typename?: 'Hotel', id: string, name: string, rating?: number | null, summary: string, description: string, thumbnail: string, images?: Array<string> | null, logo: string, slug: string, latitude?: any | null, longitude?: any | null, address?: string | null, addressNumber?: string | null, zipCode?: any | null }> | null };
+
 export type GetAllHotelsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -489,6 +503,54 @@ export function useLoginUserMutation(baseOptions?: Apollo.MutationHookOptions<Lo
 export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
 export type LoginUserMutationResult = Apollo.MutationResult<LoginUserMutation>;
 export type LoginUserMutationOptions = Apollo.BaseMutationOptions<LoginUserMutation, LoginUserMutationVariables>;
+export const HotelsByAdminDocument = gql`
+    query hotelsByAdmin($id: ID!) {
+  hotelsByAdmin(id: $id) {
+    id
+    name
+    rating
+    summary
+    description
+    thumbnail
+    images
+    logo
+    slug
+    latitude
+    longitude
+    address
+    addressNumber
+    zipCode
+  }
+}
+    `;
+
+/**
+ * __useHotelsByAdminQuery__
+ *
+ * To run a query within a React component, call `useHotelsByAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHotelsByAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHotelsByAdminQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useHotelsByAdminQuery(baseOptions: Apollo.QueryHookOptions<HotelsByAdminQuery, HotelsByAdminQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HotelsByAdminQuery, HotelsByAdminQueryVariables>(HotelsByAdminDocument, options);
+      }
+export function useHotelsByAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HotelsByAdminQuery, HotelsByAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HotelsByAdminQuery, HotelsByAdminQueryVariables>(HotelsByAdminDocument, options);
+        }
+export type HotelsByAdminQueryHookResult = ReturnType<typeof useHotelsByAdminQuery>;
+export type HotelsByAdminLazyQueryHookResult = ReturnType<typeof useHotelsByAdminLazyQuery>;
+export type HotelsByAdminQueryResult = Apollo.QueryResult<HotelsByAdminQuery, HotelsByAdminQueryVariables>;
 export const GetAllHotelsDocument = gql`
     query GetAllHotels {
   hotels {

@@ -1,0 +1,27 @@
+query hotelsByAdmin($id: ID!) {
+  hotelsByAdmin(id: $id) {
+    id
+    name
+    rating
+    summary
+    description
+    thumbnail
+    images
+    logo
+    slug
+    latitude
+    longitude
+    address
+    addressNumber
+    zipCode
+    # rooms {
+    #   id
+    #   name
+    #   summary
+    #   thumbnail
+    #   images
+    #   price
+    #   rating
+    # }
+  }
+}

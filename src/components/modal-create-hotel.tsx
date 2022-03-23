@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ModalCreateHotel = ({ refetch, onClose }: ModalProps) => {
+export const ModalCreateHotel = ({ user, refetch, onClose }: ModalProps) => {
   const classes = useStyles();
 
   faker.setLocale("pt_BR");
@@ -155,6 +155,7 @@ export const ModalCreateHotel = ({ refetch, onClose }: ModalProps) => {
             images: files.fotos,
             logo: files.logo,
             thumbnail: files.thumbnail,
+            admin: user.id,
             latitude: parseFloat(faker.address.latitude()),
             longitude: parseFloat(faker.address.longitude()),
           },
@@ -165,6 +166,7 @@ export const ModalCreateHotel = ({ refetch, onClose }: ModalProps) => {
         },
         onError: (err) => {
           console.log(err);
+          onClose();
         },
       });
 

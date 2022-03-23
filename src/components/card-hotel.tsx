@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   Card,
   CardActionArea,
@@ -9,19 +10,28 @@ import {
 } from "@material-ui/core";
 
 import { Hotel } from "../apollo/generated/schema";
+import { Room } from "@material-ui/icons";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
   },
   media: {
     height: 180,
   },
-});
+  addressLine: {
+    display: "flex",
+    marginTop: theme.spacing(1),
+    alignItems: "center",
+  },
+  address: {
+    margin: 0,
+  },
+}));
 
-interface HotelProps {
+type HotelProps = {
   hotel: Hotel;
-}
+};
 
 export const CardHotel = ({ hotel }: HotelProps) => {
   const classes = useStyles();
@@ -41,9 +51,17 @@ export const CardHotel = ({ hotel }: HotelProps) => {
           <Typography variant="body2" color="textSecondary" component="p">
             {hotel.summary}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {hotel.address}, {hotel.addressNumber}
-          </Typography>
+          <div className={classes.addressLine}>
+            <Room fontSize="small" />
+            <Typography
+              className={classes.address}
+              variant="body2"
+              color="textSecondary"
+              component="p"
+            >
+              {hotel.address}
+            </Typography>
+          </div>
         </CardContent>
       </CardActionArea>
     </Card>

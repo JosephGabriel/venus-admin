@@ -1,4 +1,5 @@
 import { GridSize } from "@material-ui/core";
+import { User } from "../apollo/generated/schema";
 
 export type StepFormProps = {
   formik: any;
@@ -26,6 +27,7 @@ export interface keyType {
 }
 
 export type ModalProps = {
+  user: User;
   refetch: () => void;
   onClose: () => void;
 };

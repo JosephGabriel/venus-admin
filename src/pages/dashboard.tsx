@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import {
   Dialog,
   Grid,
@@ -6,14 +7,15 @@ import {
   Typography,
   CircularProgress,
 } from "@material-ui/core";
+
 import { useNavigate } from "react-router-dom";
 
 import { userReactiveVar } from "../apollo/variables/user";
-import { useGetAllHotelsQuery } from "../apollo/generated/schema";
+import { useHotelsByAdminQuery } from "../apollo/generated/schema";
 
+import { CardHotel } from "../components/card-hotel";
 import { CustomButton } from "../components/custom-button";
 import { ModalCreateHotel } from "../components/modal-create-hotel";
-import { CardHotel } from "../components/card-hotel";
 
 const useStyles = makeStyles((theme) => ({
   loadingContainer: {
@@ -48,21 +50,24 @@ export const Dashboard = () => {
 
   const user = userReactiveVar.get();
 
-  const { data, loading, refetch } = useGetAllHotelsQuery();
+  const { data, loading, refetch } = useHotelsByAdminQuery({
+    variables: {
+      id: user!.user.id,
+    },
+  });
 
   useEffect(() => {
     if (!user) {
       navigate("/login");
     }
+    // eslint-disable-next-line
   }, []);
 
   if (loading) {
     return (
-      <>
-        <div className={classes.loadingContainer}>
-          <CircularProgress />
-        </div>
-      </>
+      <div className={classes.loadingContainer}>
+        <CircularProgress />
+      </div>
     );
   }
 
@@ -82,6 +87,7 @@ export const Dashboard = () => {
 
         <Dialog fullWidth open={openModal} onClose={() => setOpenModal(false)}>
           <ModalCreateHotel
+            user={user!.user}
             refetch={refetch}
             onClose={() => setOpenModal(false)}
           />
@@ -91,8 +97,8 @@ export const Dashboard = () => {
       <Grid item md={12} className={classes.cardContainer}>
         <Grid container spacing={3}>
           {data &&
-            data?.hotels?.map((hotel, idx) => (
-              <Grid item md={3} key={idx}>
+            data?.hotelsByAdmin?.map((hotel, idx) => (
+              <Grid item key={idx}>
                 <CardHotel hotel={hotel} />
               </Grid>
             ))}
