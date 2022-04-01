@@ -1,0 +1,13 @@
+query GetHotel($id: ID!) {
+  hotel(id: $id) {
+    id
+    name
+    rating
+    summary
+    description
+    thumbnail
+    images
+    logo
+    latitude
+  }
+}

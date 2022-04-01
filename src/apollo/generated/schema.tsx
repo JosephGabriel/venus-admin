@@ -136,6 +136,8 @@ export type LoginUserInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Usada para criar um admin */
+  createAdmin: AuthPayload;
   /** Usada para fazer uma reserva */
   createBooking: Booking;
   /** Usada para criar um hotel */
@@ -162,6 +164,11 @@ export type Mutation = {
   updateUserPassword: AuthPayload;
   /** Usada para verificar um usuário */
   verifyUser: AuthPayload;
+};
+
+
+export type MutationCreateAdminArgs = {
+  data: CreateUserInput;
 };
 
 
@@ -385,6 +392,13 @@ export enum UserRole {
   User = 'USER'
 }
 
+export type CreateAdminMutationVariables = Exact<{
+  data: CreateUserInput;
+}>;
+
+
+export type CreateAdminMutation = { __typename?: 'Mutation', createAdmin: { __typename?: 'AuthPayload', token: string, user: { __typename?: 'User', id: string, firstName: string, lastName: string, userName: string, email: any, avatar?: string | null, password: any, passwordChangedAt?: string | null, role: UserRole, active: boolean, verified: boolean } } };
+
 export type CreateHotelMutationVariables = Exact<{
   data: CreateHotelInput;
 }>;
@@ -399,6 +413,20 @@ export type LoginUserMutationVariables = Exact<{
 
 export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'AuthPayload', token: string, user: { __typename?: 'User', firstName: string, lastName: string, userName: string, email: any, avatar?: string | null, password: any, id: string, passwordChangedAt?: string | null, role: UserRole, active: boolean, verified: boolean } } };
 
+export type GetHotelBySlugQueryVariables = Exact<{
+  slug: Scalars['String'];
+}>;
+
+
+export type GetHotelBySlugQuery = { __typename?: 'Query', hotelBySlug: { __typename?: 'Hotel', id: string, name: string, rating?: number | null, summary: string, description: string, thumbnail: string, images?: Array<string> | null, logo: string, slug: string, latitude?: any | null, longitude?: any | null, address?: string | null, addressNumber?: string | null, zipCode?: any | null } };
+
+export type GetHotelQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetHotelQuery = { __typename?: 'Query', hotel: { __typename?: 'Hotel', id: string, name: string, rating?: number | null, summary: string, description: string, thumbnail: string, images?: Array<string> | null, logo: string, latitude?: any | null } };
+
 export type HotelsByAdminQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -412,6 +440,52 @@ export type GetAllHotelsQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetAllHotelsQuery = { __typename?: 'Query', hotels?: Array<{ __typename?: 'Hotel', id: string, name: string, rating?: number | null, summary: string, description: string, thumbnail: string, images?: Array<string> | null, logo: string, latitude?: any | null, slug: string, address?: string | null, addressNumber?: string | null, zipCode?: any | null }> | null };
 
 
+export const CreateAdminDocument = gql`
+    mutation CreateAdmin($data: CreateUserInput!) {
+  createAdmin(data: $data) {
+    token
+    user {
+      id
+      firstName
+      lastName
+      userName
+      email
+      avatar
+      password
+      passwordChangedAt
+      role
+      active
+      verified
+    }
+  }
+}
+    `;
+export type CreateAdminMutationFn = Apollo.MutationFunction<CreateAdminMutation, CreateAdminMutationVariables>;
+
+/**
+ * __useCreateAdminMutation__
+ *
+ * To run a mutation, you first call `useCreateAdminMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAdminMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAdminMutation, { data, loading, error }] = useCreateAdminMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateAdminMutation(baseOptions?: Apollo.MutationHookOptions<CreateAdminMutation, CreateAdminMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAdminMutation, CreateAdminMutationVariables>(CreateAdminDocument, options);
+      }
+export type CreateAdminMutationHookResult = ReturnType<typeof useCreateAdminMutation>;
+export type CreateAdminMutationResult = Apollo.MutationResult<CreateAdminMutation>;
+export type CreateAdminMutationOptions = Apollo.BaseMutationOptions<CreateAdminMutation, CreateAdminMutationVariables>;
 export const CreateHotelDocument = gql`
     mutation CreateHotel($data: CreateHotelInput!) {
   createHotel(data: $data) {
@@ -503,6 +577,97 @@ export function useLoginUserMutation(baseOptions?: Apollo.MutationHookOptions<Lo
 export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
 export type LoginUserMutationResult = Apollo.MutationResult<LoginUserMutation>;
 export type LoginUserMutationOptions = Apollo.BaseMutationOptions<LoginUserMutation, LoginUserMutationVariables>;
+export const GetHotelBySlugDocument = gql`
+    query GetHotelBySlug($slug: String!) {
+  hotelBySlug(slug: $slug) {
+    id
+    name
+    rating
+    summary
+    description
+    thumbnail
+    images
+    logo
+    slug
+    latitude
+    longitude
+    address
+    addressNumber
+    zipCode
+  }
+}
+    `;
+
+/**
+ * __useGetHotelBySlugQuery__
+ *
+ * To run a query within a React component, call `useGetHotelBySlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHotelBySlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHotelBySlugQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetHotelBySlugQuery(baseOptions: Apollo.QueryHookOptions<GetHotelBySlugQuery, GetHotelBySlugQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetHotelBySlugQuery, GetHotelBySlugQueryVariables>(GetHotelBySlugDocument, options);
+      }
+export function useGetHotelBySlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetHotelBySlugQuery, GetHotelBySlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetHotelBySlugQuery, GetHotelBySlugQueryVariables>(GetHotelBySlugDocument, options);
+        }
+export type GetHotelBySlugQueryHookResult = ReturnType<typeof useGetHotelBySlugQuery>;
+export type GetHotelBySlugLazyQueryHookResult = ReturnType<typeof useGetHotelBySlugLazyQuery>;
+export type GetHotelBySlugQueryResult = Apollo.QueryResult<GetHotelBySlugQuery, GetHotelBySlugQueryVariables>;
+export const GetHotelDocument = gql`
+    query GetHotel($id: ID!) {
+  hotel(id: $id) {
+    id
+    name
+    rating
+    summary
+    description
+    thumbnail
+    images
+    logo
+    latitude
+  }
+}
+    `;
+
+/**
+ * __useGetHotelQuery__
+ *
+ * To run a query within a React component, call `useGetHotelQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHotelQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHotelQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetHotelQuery(baseOptions: Apollo.QueryHookOptions<GetHotelQuery, GetHotelQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetHotelQuery, GetHotelQueryVariables>(GetHotelDocument, options);
+      }
+export function useGetHotelLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetHotelQuery, GetHotelQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetHotelQuery, GetHotelQueryVariables>(GetHotelDocument, options);
+        }
+export type GetHotelQueryHookResult = ReturnType<typeof useGetHotelQuery>;
+export type GetHotelLazyQueryHookResult = ReturnType<typeof useGetHotelLazyQuery>;
+export type GetHotelQueryResult = Apollo.QueryResult<GetHotelQuery, GetHotelQueryVariables>;
 export const HotelsByAdminDocument = gql`
     query hotelsByAdmin($id: ID!) {
   hotelsByAdmin(id: $id) {

@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  Dialog,
-  Grid,
-  makeStyles,
-  Typography,
-  CircularProgress,
-} from "@material-ui/core";
+import { Dialog, Grid, makeStyles, Typography } from "@material-ui/core";
 
 import { useNavigate } from "react-router-dom";
 
@@ -16,16 +10,9 @@ import { useHotelsByAdminQuery } from "../apollo/generated/schema";
 import { CardHotel } from "../components/card-hotel";
 import { CustomButton } from "../components/custom-button";
 import { ModalCreateHotel } from "../components/modal-create-hotel";
+import { Loader } from "../components/loader";
 
 const useStyles = makeStyles((theme) => ({
-  loadingContainer: {
-    height: "90vh",
-    width: "100vw",
-    padding: theme.spacing(2),
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   container: {
     padding: theme.spacing(3),
   },
@@ -50,7 +37,7 @@ export const Dashboard = () => {
 
   const user = userReactiveVar.get();
 
-  const { data, loading, refetch } = useHotelsByAdminQuery({
+  const { data, error, loading, refetch, updateQuery } = useHotelsByAdminQuery({
     variables: {
       id: user!.user.id,
     },
@@ -64,11 +51,11 @@ export const Dashboard = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className={classes.loadingContainer}>
-        <CircularProgress />
-      </div>
-    );
+    return <Loader />;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
   }
 
   return (

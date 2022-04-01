@@ -1,0 +1,18 @@
+mutation CreateAdmin($data: CreateUserInput!) {
+  createAdmin(data: $data) {
+    token
+    user {
+      id
+      firstName
+      lastName
+      userName
+      email
+      avatar
+      password
+      passwordChangedAt
+      role
+      active
+      verified
+    }
+  }
+}

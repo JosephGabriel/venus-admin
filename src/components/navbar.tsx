@@ -71,14 +71,18 @@ export const Navbar = ({ setColorMode }: NavProps) => {
             ) : (
               <>
                 {user?.user.avatar ? (
-                  <Avatar
-                    alt={`${user?.user.firstName} ${user?.user.lastName}`}
-                    src={user?.user.avatar}
-                  />
+                  <Link to="/dashboard">
+                    <Avatar
+                      alt={`${user?.user.firstName} ${user?.user.lastName}`}
+                      src={user?.user.avatar}
+                    />
+                  </Link>
                 ) : (
-                  <Avatar>
-                    <AccountCircle />
-                  </Avatar>
+                  <Link to="/dashboard">
+                    <Avatar>
+                      <AccountCircle />
+                    </Avatar>
+                  </Link>
                 )}
               </>
             )}

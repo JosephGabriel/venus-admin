@@ -12,6 +12,7 @@ import {
 
 import { Routes, Route } from "react-router-dom";
 
+import { HotelPage } from "./pages/hotel";
 import { LoginPage } from "./pages/login";
 import { SignupPage } from "./pages/signup";
 import { Dashboard } from "./pages/dashboard";
@@ -50,6 +51,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/hotel/:slug" element={<HotelPage />} />
           </Routes>
         </>
       </ThemeProvider>

@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { createUploadLink } from "apollo-upload-client";
 
-const authHeader = localStorage.getItem("token") || "";
+const authHeader = localStorage.getItem("token");
 
 export const client = new ApolloClient({
   link: createUploadLink({
@@ -10,6 +10,6 @@ export const client = new ApolloClient({
     },
     uri: "http://localhost:4000/graphql",
   }),
-  connectToDevTools: true,
+  connectToDevTools: process.env.NODE_ENV === "development",
   cache: new InMemoryCache(),
 });

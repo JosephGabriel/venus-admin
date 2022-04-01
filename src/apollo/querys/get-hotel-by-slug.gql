@@ -1,0 +1,18 @@
+query GetHotelBySlug($slug: String!) {
+  hotelBySlug(slug: $slug) {
+    id
+    name
+    rating
+    summary
+    description
+    thumbnail
+    images
+    logo
+    slug
+    latitude
+    longitude
+    address
+    addressNumber
+    zipCode
+  }
+}
